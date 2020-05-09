@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <Route exact path="/" render={(props) => <HomePage {...props} />} />
       <Route path="/act-now" render={(props) => <Funnel {...props} />} />
-      <footer>Vizier Estate Group © 2020</footer>
+      <footer>Vizier Estate Group© 2020</footer>
     </div>
   );
 }
