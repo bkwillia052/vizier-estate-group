@@ -80,8 +80,7 @@ const Funnel = (props) => {
   };
 
   let submitItem = () => {
-    //createItem(userData);
-    console.log(state.formData);
+    createItem(state.formData);
     setState({ ...state, formSubmitted: true });
     localStorage.setItem('submitted', true)
   };
@@ -262,6 +261,8 @@ const Funnel = (props) => {
                   {" "}
                   Keep an eye on your inbox for more information about our
                   services and exclusive property deals targeting your area.
+                  <br/>
+                  <br/>
                   We look forward to working with you!
                 </p>
               </div>

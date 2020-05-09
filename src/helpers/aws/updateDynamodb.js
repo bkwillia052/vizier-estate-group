@@ -15,9 +15,9 @@ export function createItem(userData) {
     };
     docClient.put(params, function(err, data) {
         if (err) {
-            console.log('ERROR', err)
+            /* console.log('ERROR', err) */
         } else {
-            console.log('SUCCESS', data)
+            /* console.log('SUCCESS', data) */
         }
     }); 
     
