@@ -2,8 +2,20 @@ import React, { useState, useEffect, useMemo } from "react";
 import "./Funnel.css";
 import { RightCircleOutlined, CaretRightOutlined } from "@ant-design/icons";
 import { cityState } from "../data/cityState";
+import { createItem } from "../helpers/aws/updateDynamodb";
 
-const array = ["Choose an option--", "All", "Residential: Single Family", "Residential: Townhouse", "Residential: Multi-Family", "Residential: Duplex", "Residential: Triplex", "Residential: Apartment", "Residential: Quad", "Commercial"]
+const array = [
+  "Choose an option--",
+  "All",
+  "Residential: Single Family",
+  "Residential: Townhouse",
+  "Residential: Multi-Family",
+  "Residential: Duplex",
+  "Residential: Triplex",
+  "Residential: Apartment",
+  "Residential: Quad",
+  "Commercial",
+];
 
 const Funnel = (props) => {
   let [state, setState] = useState({
@@ -11,17 +23,26 @@ const Funnel = (props) => {
     suggestions: [],
     hide: false,
     formData: {
-      name: '',
-      market: '',
-      propType: '',
-      email: ''
-    }
+      name: "",
+      market: "",
+      propType: "",
+      email: "",
+    },
+    formSubmitted: false,
   });
 
   useEffect(() => {
-    let height = document.querySelector(".acs-itms").scrollHeight;
+    let item = document.querySelector(".acs-itms");
+    let height = item ? item.scrollHeight : 0;
+    let formSubmitted = false;
+    let submitStatus = localStorage.getItem('submitted')
 
-    setState({ ...state, height });
+    console.log("ENV",process.env.REACT_APP_AWS_SECRET)
+    if(submitStatus === 'true'){
+      formSubmitted = true;
+    }
+
+    setState({ ...state, height, formSubmitted });
   }, []);
 
   let getSuggestions = (e) => {
@@ -39,26 +60,31 @@ const Funnel = (props) => {
   };
 
   let updateValues = (e) => {
-    e.stopPropagation()
-    e.preventDefault()
+    e.stopPropagation();
+    e.preventDefault();
     let value = e.target.value ? e.target.value : e.target.innerText;
     /* console.log(e.target.value ? e.target.value : e.target.innerText)
     console.log(e.target.id) */
-    let formData = {...state.formData, [e.target.id]: value }
+    let formData = { ...state.formData, [e.target.id]: value };
 
-    console.log(value)
+   
     setState({
       ...state,
-      formData
-    })
-  }
+      formData,
+    });
+  };
   let formIsFull = () => {
-    let {name, market, propType, email} = state.formData;
+    let { name, market, propType, email } = state.formData;
 
-    return name && market && propType && email
+    return name && market && propType && email;
+  };
 
-  }
-
+  let submitItem = () => {
+    //createItem(userData);
+    console.log(state.formData);
+    setState({ ...state, formSubmitted: true });
+    localStorage.setItem('submitted', true)
+  };
 
   return (
     <>
@@ -76,138 +102,173 @@ const Funnel = (props) => {
         </nav>
         <div className="bg-opaque">
           <div className="v-header">
-            <div className='hdr-ctr'> <div className="rgs-ctr">
-              <CaretRightOutlined />
-              <span className="register"> REGISTER </span>
+            <div className="hdr-ctr">
+              {" "}
+              <div className="rgs-ctr">
+                <CaretRightOutlined />
+                <span className="register"> REGISTER </span>
+              </div>
+              &nbsp;WITH VIZIER.{" "}
             </div>
-            &nbsp;WITH VIZIER. </div>
 
-            <div className="hdr-ctr bg"><span className="stabilize">&nbsp;FORTIFY</span>
-            &nbsp;YOUR EMPIRE.</div>
-           
+            <div className="hdr-ctr bg">
+              <span className="stabilize">&nbsp;FORTIFY</span>
+              &nbsp;YOUR EMPIRE.
+            </div>
           </div>
           <div className="btm">
-            <div className="btm-sec">
-              <div className="acs-ctr">
-                <h1 className="acs-hdr">
-                  RESERVE ACCESS <span>NOW</span>
-                </h1>
-                <div className="acs-spt">
-                  <span>23</span>&nbsp;SPOTS REMAINING
+            {!state.formSubmitted ? (
+              <>
+                <div className="btm-sec">
+                  <div className="acs-ctr">
+                    <h1 className="acs-hdr">
+                      RESERVE ACCESS <span>NOW</span>
+                    </h1>
+                    <div className="acs-spt">
+                      <span>23</span>&nbsp;SPOTS REMAINING
+                    </div>
+                    <div className="acs-dsc">
+                      Expand your reach with a customized digital purchasing
+                      pipeline optimized for making quick and informed
+                      decisions.
+                    </div>
+                    <div className="acs-lst">
+                      <div className="acs-side">
+                        <div className="l-bar"></div>
+                        <div className="r-bar">
+                          <div className="i-bar"></div>
+                        </div>
+                      </div>
+                      <div className="acs-itms">
+                        <div className="acs-itm">
+                          <div className="acs-icon">
+                            <RightCircleOutlined />
+                          </div>
+                          {" VIRTUAL TOURS "}
+                        </div>
+                        <div className="acs-itm">
+                          <div className="acs-icon">
+                            <RightCircleOutlined />
+                          </div>
+                          SECURE DIGITAL CLOSINGS ($15-20K PER DEAL){" "}
+                          <span style={{ fontSize: "10px" }}>&nbsp;</span>
+                        </div>
+                        <div className="acs-itm">
+                          <div className="acs-icon">
+                            <RightCircleOutlined />
+                          </div>
+                          {" ADVANCED PROPERTY LISTING UPDATES"}
+                        </div>
+                        <div className="acs-itm">
+                          <div className="acs-icon">
+                            <RightCircleOutlined />
+                          </div>
+                          {" CUSTOM SERVICES & TOOLS BUILT FOR YOU"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="acs-dsc">
-                  Expand your reach with a customized digital purchasing
-                  pipeline optimized for making quick and informed decisions.
-                </div>
-                <div className="acs-lst">
-                  <div className="acs-side">
-                    <div className="l-bar"></div>
-                    <div className="r-bar">
-                      <div className="i-bar"></div>
+                <div className="btm-sec">
+                  <div className="acs-ctr r">
+                    <h1 className="acs-hdr2">
+                      <span>EXCLUSIVE</span>
+                      <br />
+                      CASH BUYER DEALS IN YOUR INBOX
+                    </h1>
+                    <div className="mr-inf">
+                      SIGN UP NOW FOR MORE INFORMATION
                     </div>
-                  </div>
-                  <div className="acs-itms">
-                    <div className="acs-itm">
-                      <div className="acs-icon">
-                        <RightCircleOutlined />
-                      </div>
-                      {" VIRTUAL TOURS "}
-                    </div>
-                    <div className="acs-itm">
-                      <div className="acs-icon">
-                        <RightCircleOutlined />
-                      </div>
-                      SECURE DIGITAL CLOSINGS ($15-20K PER DEAL){" "}
-                      <span style={{ fontSize: "10px" }}>&nbsp;</span>
-                    </div>
-                    <div className="acs-itm">
-                      <div className="acs-icon">
-                        <RightCircleOutlined />
-                      </div>
-                      {" ADVANCED PROPERTY LISTING UPDATES"}
-                    </div>
-                    <div className="acs-itm">
-                      <div className="acs-icon">
-                        <RightCircleOutlined />
-                      </div>
-                      {" CUSTOM SERVICES & TOOLS BUILT FOR YOU"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="btm-sec">
-              <div className="acs-ctr r">
-                <h1 className="acs-hdr2">
-                  <span>EXCLUSIVE</span>
-                  <br />
-                  CASH BUYER DEALS IN YOUR INBOX
-                </h1>
-                <div className="mr-inf">SIGN UP NOW FOR MORE INFORMATION</div>
-                <form
-                  className="form"
-                  onClick={(e) => {
-                    if (e.target.id !== "zone") {
-                      document
-                        .querySelector(".suggestions-ctr")
-                        .classList.add("hidden");
-                    }
-                  }}
-                >
-                  <div className="input-ctr">
-                    <div for="name" className="titles">
-                      FULL NAME
-                    </div>
-                    <div className="input">
-                      <input type="text" id="name" onKeyUp={updateValues} name="name" />
-                    </div>
-                  </div>
-                  <div className="input-ctr">
-                    <div className="titles" >
-                      TARGET MARKET
-                    </div>
-                    <LocInput
-                      updateValues={updateValues}
-                      suggestions={state.suggestions}
-                      getSuggestions={getSuggestions}
-                    />
-                  </div>
-                  <div className="input-ctr">
-                    <div for="prop-types" className="titles">
-                      PROPERTY TYPE
-                    </div>
-                    <div className="input">
-                      {" "}
-                      <select onMouseUp={updateValues} name="prop-types" id="propType">
-                        {
-                          array.map(option => {
-                            return (<option id={option}>{option}</option>)
-                          })
+                    <form
+                      className="form"
+                      onClick={(e) => {
+                        if (e.target.id !== "zone") {
+                          document
+                            .querySelector(".suggestions-ctr")
+                            .classList.add("hidden");
                         }
-                
-                        
-                      </select>
-                    </div>
-                  </div>
-                  <div className="input-ctr">
-                    <div for="email" className="titles">
-                      EMAIL
-                    </div>
-                    <div className="input">
-                      <input type="email" onKeyUp={updateValues} id="email" name="email" />
-                    </div>
-                  </div>
+                      }}
+                    >
+                      <div className="input-ctr">
+                        <div for="name" className="titles">
+                          FULL NAME
+                        </div>
+                        <div className="input">
+                          <input
+                            type="text"
+                            id="name"
+                            onKeyUp={updateValues}
+                            name="name"
+                          />
+                        </div>
+                      </div>
+                      <div className="input-ctr">
+                        <div className="titles">TARGET MARKET</div>
+                        <LocInput
+                          updateValues={updateValues}
+                          suggestions={state.suggestions}
+                          getSuggestions={getSuggestions}
+                        />
+                      </div>
+                      <div className="input-ctr">
+                        <div for="prop-types" className="titles">
+                          PROPERTY TYPE
+                        </div>
+                        <div className="input">
+                          {" "}
+                          <select
+                            onMouseUp={updateValues}
+                            name="prop-types"
+                            id="propType"
+                          >
+                            {array.map((option) => {
+                              return <option id={option}>{option}</option>;
+                            })}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="input-ctr">
+                        <div for="email" className="titles">
+                          EMAIL
+                        </div>
+                        <div className="input">
+                          <input
+                            type="email"
+                            onKeyUp={updateValues}
+                            id="email"
+                            name="email"
+                          />
+                        </div>
+                      </div>
 
-                  <div className="submit-ctr">
-                    <div onClick={()=>console.log(state.formData)} className={`submit ${ formIsFull() ? "" : "inactive" } ` }>SUBMIT</div>
+                      <div className="submit-ctr">
+                        <div
+                          onClick={submitItem}
+                          className={`submit ${
+                            formIsFull() ? "" : "inactive"
+                          } `}
+                        >
+                          SUBMIT
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                </form>
+                </div>{" "}
+              </>
+            ) : (
+              <div className="ty-sbt">
+                <h1 className="ty-hdr">Thank You for Registering!</h1>
+                <p className="ty-txt">
+                  {" "}
+                  Keep an eye on your inbox for more information about our
+                  services and exclusive property deals targeting your area.
+                  We look forward to working with you!
+                </p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
-      {/* <div className="pg-sec purple">Ho</div> */}
     </>
   );
 };
@@ -242,7 +303,6 @@ const LocInput = ({ suggestions, getSuggestions, updateValues }) => {
       suggestions: getSuggestions(e),
       hide: false,
     });
-    
   };
 
   let switchValue = (e) => {
@@ -253,7 +313,6 @@ const LocInput = ({ suggestions, getSuggestions, updateValues }) => {
 
   let blur = (e) => {
     e.stopPropagation();
-    console.log(e);
 
     setState({ ...state2, hide: true });
   };
@@ -278,7 +337,12 @@ const LocInput = ({ suggestions, getSuggestions, updateValues }) => {
         {state2.suggestions.length
           ? state2.suggestions.map((suggestion) => {
               return (
-                <div className="option" id="market" onMouseUp={updateValues} onClick={switchValue}>
+                <div
+                  className="option"
+                  id="market"
+                  onMouseUp={updateValues}
+                  onClick={switchValue}
+                >
                   {suggestion}
                 </div>
               );
@@ -288,4 +352,3 @@ const LocInput = ({ suggestions, getSuggestions, updateValues }) => {
     </div>
   );
 };
-
