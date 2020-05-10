@@ -37,7 +37,6 @@ const Funnel = (props) => {
     let formSubmitted = false;
     let submitStatus = localStorage.getItem('submitted')
 
-    console.log("ENV",process.env.REACT_APP_AWS_ACCESS_KEY,process.env.REACT_APP_AWS_SECRET)
     if(submitStatus === 'true'){
       formSubmitted = true;
     }

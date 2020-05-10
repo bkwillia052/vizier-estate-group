@@ -33,7 +33,6 @@ Object.keys(states).forEach(state =>{
   })
 })
 
-console.log(alphabetizedDict)
 
 fs.writeFile('./src/data/cityState.js', JSON.stringify(alphabetizedDict), (err)=>{
   if(err) throw err;
