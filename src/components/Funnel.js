@@ -17,6 +17,21 @@ const array = [
   "Commercial",
 ];
 
+
+function gtag_report_conversion(url) {
+  var callback = function () {
+    if (typeof(url) != 'undefined') {
+      window.location = url;
+    }
+  };
+  window.gtag('event', 'conversion', {
+      'send_to': 'AW-835328739/lcSjCNCK8s8BEOO1qI4D',
+      'event_callback': callback
+  });
+  return false;
+}
+
+
 const Funnel = (props) => {
   let [state, setState] = useState({
     height: 0,
@@ -82,6 +97,7 @@ const Funnel = (props) => {
     createItem(state.formData);
     setState({ ...state, formSubmitted: true });
     localStorage.setItem('submitted', true)
+    gtag_report_conversion()
   };
 
   return (
