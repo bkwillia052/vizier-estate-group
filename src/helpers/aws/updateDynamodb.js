@@ -20,7 +20,7 @@ var snsParams = {
         StringValue: 'New User Registered'
       },
     },
-    PhoneNumber: '+17023084860',
+    PhoneNumber: '+17023084860'
   };
   
 export function createItem(userData) {

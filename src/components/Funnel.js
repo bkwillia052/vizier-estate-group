@@ -139,7 +139,7 @@ const Funnel = (props) => {
                       RESERVE ACCESS <span>NOW</span>
                     </h1>
                     <div className="acs-spt">
-                      <span>23</span>&nbsp;SPOTS REMAINING
+                      <span>13</span>&nbsp;SPOTS REMAINING
                     </div>
                     <div className="acs-dsc">
                       Expand your reach with a customized digital purchasing
