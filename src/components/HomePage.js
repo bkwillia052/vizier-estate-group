@@ -12,7 +12,11 @@ const HomePage = ({...props}) => {
 
     return (
         <>
-        <div style={{height: '100vh'}}></div>
+        <div className='home-ctr' style={{height: '100vh'}}>
+            <nav className="home-nav">
+
+            </nav>
+        </div>
         </>
     )
 }
